@@ -1,0 +1,26 @@
+{
+  "name": "reach-naija",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reach Naija demo: WhatsApp/USSD postcode finder, Address Cards and Verified Arrival on the NIPOST Postcode API",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server/src/index.ts",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server/src/index.ts",
+    "migrate": "node --disable-warning=ExperimentalWarning server/src/db/migrate.ts",
+    "keys": "node --disable-warning=ExperimentalWarning scripts/gen-keys.ts",
+    "smoke": "node --disable-warning=ExperimentalWarning scripts/smoke-test.ts",
+    "typecheck": "tsc -p server/tsconfig.json"
+  },
+  "optionalDependencies": {
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/pg": "^8.11.10",
+    "typescript": "^5.8.0"
+  }
+}

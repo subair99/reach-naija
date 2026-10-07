@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared/base.css">
+<link rel="stylesheet" href="/ussd/styles.css">
+<title>USSD simulator · Reach Naija</title>
+</head>
+<body>
+<main>
+  <h1>USSD simulator</h1>
+  <p class="muted">Posts to <code>/webhooks/ussd</code> exactly as Africa's Talking does, so you can rehearse the feature-phone flow offline.</p>
+  <div class="phone">
+    <div class="screen" id="screen" aria-live="polite">Press Dial to start.</div>
+    <input id="answer" type="text" inputmode="numeric" placeholder="Reply" disabled aria-label="Your reply">
+    <div class="keys">
+      <button id="dial">Dial *384*1#</button>
+      <button id="send" disabled>Send</button>
+      <button id="cancel" class="secondary">End</button>
+    </div>
+  </div>
+  <label for="phone">Phone number (hashed before storage)</label>
+  <input id="phone" type="tel" value="+2348012345678">
+</main>
+<script type="module" src="/ussd/ussd.js"></script>
+</body>
+</html>

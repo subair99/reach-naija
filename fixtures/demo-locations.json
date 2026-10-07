@@ -1,0 +1,70 @@
+{
+  "_readme": [
+    "Coordinates used by (1) the mock NIPOST in NIPOST_MODE=mock and (2) the rider page's 'Simulated location' switch.",
+    "The coordinates below are PLACEHOLDERS, not the real positions of these buildings.",
+    "Before demo day, replace them with coordinates that reverse-geocode to each postcode on NIPOST staging",
+    "(ask NIPOST onboarding, or use the widget's map mode), then run scripts/smoke-test.sh in live mode."
+  ],
+  "locations": [
+    {
+      "id": "lagos-demo-home",
+      "label": "Demo customer home",
+      "postcode": "LA-11-W06-TC-10",
+      "lat": 6.52440,
+      "lng": 3.37920,
+      "mock": {
+        "state_name": "LAGOS",
+        "lga_name": "MOCK LGA",
+        "locality_name": "MOCK LOCALITY",
+        "zone": "SOUTH WEST",
+        "recent_house_address": "MOCK ADDRESS (replace with staging data)",
+        "building_use_status": "residential"
+      }
+    },
+    {
+      "id": "lagos-demo-neighbour",
+      "label": "Neighbouring building (for the 'pick one' flow)",
+      "postcode": "LA-11-U34-ZR-63",
+      "lat": 6.52470,
+      "lng": 3.37960,
+      "mock": {
+        "state_name": "LAGOS",
+        "lga_name": "MOCK LGA",
+        "locality_name": "MOCK LOCALITY",
+        "zone": "SOUTH WEST",
+        "recent_house_address": "MOCK ADDRESS (replace with staging data)",
+        "building_use_status": "commercial"
+      }
+    },
+    {
+      "id": "abuja-demo",
+      "label": "FCT demo building",
+      "postcode": "FC-02-B19-RT-30",
+      "lat": 9.07650,
+      "lng": 7.39860,
+      "mock": {
+        "state_name": "FEDERAL CAPITAL TERRITORY",
+        "lga_name": "MOCK LGA",
+        "locality_name": "MOCK LOCALITY",
+        "zone": "NORTH CENTRAL",
+        "recent_house_address": "MOCK ADDRESS (replace with staging data)",
+        "building_use_status": "residential"
+      }
+    },
+    {
+      "id": "kano-demo",
+      "label": "Kano demo building",
+      "postcode": "KN-31-F82-WJ-80",
+      "lat": 12.00220,
+      "lng": 8.59200,
+      "mock": {
+        "state_name": "KANO",
+        "lga_name": "MOCK LGA",
+        "locality_name": "MOCK LOCALITY",
+        "zone": "NORTH WEST",
+        "recent_house_address": "MOCK ADDRESS (replace with staging data)",
+        "building_use_status": "residential"
+      }
+    }
+  ]
+}

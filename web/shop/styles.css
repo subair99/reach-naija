@@ -1,0 +1,5 @@
+.shop-head { border-bottom: 3px solid var(--green-900); padding-bottom: 12px; margin-bottom: 8px; }
+.line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+#place { width: 100%; margin-top: 18px; padding: 16px; font-size: 1.1rem; }
+.otp { font: 700 2.6rem/1 var(--plate-font); letter-spacing: 0.18em; margin: 8px 0 4px; }
+.verified-title { color: var(--green-700); }

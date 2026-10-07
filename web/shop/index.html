@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared/base.css">
+<link rel="stylesheet" href="/shop/styles.css">
+<title>Checkout · Mama Ngozi Pharmacy (demo)</title>
+</head>
+<body>
+<main>
+  <header class="shop-head">
+    <h1>Mama Ngozi Pharmacy</h1>
+    <p class="muted">A demo shop showing a merchant checkout that asks for a NIPOST postcode.</p>
+  </header>
+
+  <section class="panel" id="checkout">
+    <h2>Your order</h2>
+    <div class="line"><span id="item">Amoxicillin 500 mg, 21 capsules</span><span>₦4,500</span></div>
+    <div class="line"><span>Delivery</span><span>₦1,000</span></div>
+
+    <label for="code">Delivery postcode</label>
+    <input id="code" class="code-input" type="text" autocomplete="off" spellcheck="false" placeholder="LA 11 W06 TC 10" maxlength="20">
+    <p class="muted"><small>Don't know it? Send your location pin to the Reach Naija WhatsApp number.</small></p>
+    <div class="row">
+      <button id="check" class="secondary">Check postcode</button>
+      <button id="widget" class="secondary" hidden>Choose with NIPOST</button>
+    </div>
+    <div id="check-result" aria-live="polite"></div>
+
+    <button id="place" disabled>Place order</button>
+  </section>
+
+  <section class="panel" id="order" hidden aria-live="polite"></section>
+</main>
+<script type="module" src="/shop/checkout.js"></script>
+</body>
+</html>

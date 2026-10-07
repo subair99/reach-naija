@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared/base.css">
+<link rel="stylesheet" href="/rider/styles.css">
+<title>Rider · Reach Naija</title>
+</head>
+<body>
+<div id="sim-banner" class="sim-banner" hidden>Simulated location: not the phone's real GPS</div>
+<main>
+  <h1>Deliveries</h1>
+  <div id="list" aria-live="polite"><p class="muted">Loading deliveries…</p></div>
+  <section id="job" hidden></section>
+
+  <details class="panel" id="sim-panel">
+    <summary>Demo controls</summary>
+    <label class="switch"><input type="checkbox" id="sim-on"> Use a simulated location</label>
+    <label for="sim-loc">Simulated position</label>
+    <select id="sim-loc"></select>
+    <p class="muted"><small>For stage demos away from the test building. Every check made this way is marked as simulated, on screen and in the signed record.</small></p>
+  </details>
+</main>
+<script type="module" src="/rider/simulate.js"></script>
+<script type="module" src="/rider/rider.js"></script>
+</body>
+</html>

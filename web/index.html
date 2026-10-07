@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared/base.css">
+<title>Reach Naija demo</title>
+<style>
+  .hero { margin: 8px 0 28px; }
+  .hero h1 { font-size: clamp(2.6rem, 9vw, 4.2rem); margin-bottom: 4px; }
+  .hero p { font-size: 1.15rem; }
+  .pieces { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+  .pieces li { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 16px 0; border-top: 1px solid var(--line); align-items: center; }
+  .pieces li p { margin: 0; color: var(--muted); grid-column: 1; }
+  .pieces li .button { grid-row: 1 / span 2; grid-column: 2; }
+  @media (max-width: 560px) {
+    .pieces li { grid-template-columns: 1fr; }
+    .pieces li .button { grid-row: auto; grid-column: 1; justify-self: start; margin-top: 8px; }
+  }
+  #outbox .msg { white-space: pre-wrap; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-s); padding: 10px 12px; margin: 8px 0; }
+</style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <h1>Reach Naija</h1>
+    <p>One postcode. Verified. Actionable. Everywhere.</p>
+    <div id="hero-plate"></div>
+    <p class="muted" id="status"></p>
+  </section>
+
+  <h2>Demo pieces</h2>
+  <ul class="pieces">
+    <li><h3>Address Card</h3><p>Create a card for the NIPOST test postcode and open it in Deliver or Help mode.</p><button id="sample" class="button">Create a sample card</button></li>
+    <li><h3>Pharmacy checkout</h3><p>Free NIPOST check at checkout, then live delivery status and the signed record.</p><a class="button" href="/shop/">Open shop</a></li>
+    <li><h3>Rider view</h3><p>Check in at the building and confirm hand-over with the customer's code. Open it on your phone.</p><a class="button" href="/rider/">Open rider view</a></li>
+    <li><h3>USSD</h3><p>Step through state, LGA, district, area and building on a simulated feature phone.</p><a class="button" href="/ussd/">Open simulator</a></li>
+  </ul>
+
+  <h2>WhatsApp</h2>
+  <p id="wa-help">Share a location pin with your WhatsApp test number. Replies appear on your phone.</p>
+  <div id="outbox"></div>
+</main>
+<script type="module">
+  import { api, esc, mockRibbon, plateHTML } from "/shared/plate.js";
+  const cfg = await mockRibbon();
+  document.getElementById("hero-plate").innerHTML = plateHTML("LA11W06TC10", { reveal: true });
+  document.getElementById("status").textContent =
+    `NIPOST: ${cfg.mock ? "mock data" : "live API"} · WhatsApp: ${cfg.whatsappDryRun ? "dry run" : "live"} · Card links use ${cfg.publicUrl}`;
+
+  document.getElementById("sample").onclick = async () => {
+    const { card } = await api("/api/cards", { method: "POST", body: { postcode: "LA-11-W06-TC-10", note: "Second gate after the pharmacy" } });
+    location.href = "/c/" + card.id;
+  };
+
+  if (cfg.whatsappDryRun) {
+    document.getElementById("wa-help").innerHTML =
+      "WhatsApp is in dry-run mode: replies are kept here instead of being sent. Post a test message with <code>scripts/smoke-test.sh</code>, or add your Meta credentials to <code>.env</code>.";
+    const load = async () => {
+      const { messages } = await api("/api/dev/outbox");
+      document.getElementById("outbox").innerHTML = messages.length
+        ? messages.slice(-6).reverse().map((m) => `<div class="msg">${m.kind === "audio" ? "🔊 Voice note: " : ""}${esc(m.body)}</div>`).join("")
+        : '<p class="muted">No messages yet.</p>';
+    };
+    load(); setInterval(load, 3000);
+  }
+</script>
+</body>
+</html>

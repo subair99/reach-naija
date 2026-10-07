@@ -1,0 +1,7 @@
+.sim-banner { position: sticky; top: 0; z-index: 10; background: var(--signal); color: var(--ink); font-weight: 600; text-align: center; padding: 8px; }
+.job-item { display: grid; gap: 8px; width: 100%; text-align: left; background: var(--surface); color: var(--ink); border: 1.5px solid var(--line); padding: 14px; margin: 10px 0; border-radius: var(--radius-m); }
+.job-item:hover { border-color: var(--green-700); }
+.job-meta { display: flex; justify-content: space-between; color: var(--muted); font-weight: 400; }
+.big-action { width: 100%; padding: 18px; font-size: 1.15rem; margin-top: 12px; }
+#otp { font: 700 2rem/1 var(--plate-font); letter-spacing: 0.3em; text-align: center; }
+summary { cursor: pointer; font-weight: 600; }
