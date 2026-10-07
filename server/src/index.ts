@@ -16,6 +16,7 @@ import "./checkout/routes.ts";
 import "./arrival/routes.ts";
 import "./channels/whatsapp/webhook.ts";
 import "./channels/ussd/handler.ts";
+import "./find/routes.ts";
 import { route } from "./lib/http.ts";
 import { dryRun } from "./channels/whatsapp/send.ts";
 
@@ -30,6 +31,8 @@ route("GET", "/api/config", (_req, res) => json(res, 200, {
   mock: config.nipost.mode === "mock",
   publicUrl: config.publicUrl,
   whatsappDryRun: dryRun,
+  geocoder: config.geocoder.mode,
+  map: config.map,
   widget: config.nipost.publishableKey && config.nipost.widgetScriptUrl
     ? { key: config.nipost.publishableKey, scriptUrl: config.nipost.widgetScriptUrl, environment: config.nipost.widgetEnvironment }
     : null,
@@ -93,6 +96,7 @@ async function main() {
       `  Public URL: ${config.publicUrl}`,
       `  NIPOST:     ${config.nipost.mode === "mock" ? "MOCK (fixtures, not real data)" : `live → ${config.nipost.baseUrl} (max level ${config.nipost.maxLevel})`}`,
       `  Store:      ${config.store}`,
+      `  Geocoder:   ${config.geocoder.mode === "mock" ? "MOCK (fixtures)" : config.geocoder.url}`,
       `  WhatsApp:   ${dryRun ? "dry run (see /api/dev/outbox)" : "live"}`,
       ...warnings.map((w) => `  ! ${w}`),
       "",

@@ -139,5 +139,12 @@ async function handle(m: any) {
     return sendText(from, say("deleted", lang, { display: latestEveryday.display }));
   }
 
+  // Anything that looks like an address goes to the map page, where the user confirms the pin.
+  // WhatsApp can't show a draggable map, and a geocoder alone is too often wrong in Nigeria.
+  if (body.length >= 8 && /[a-z]/i.test(body) && body.split(/\s+/).length >= 2) {
+    const url = `${config.publicUrl}/find/?q=${encodeURIComponent(body.slice(0, 200))}`;
+    return sendText(from, say("address", lang, { url }));
+  }
+
   return sendText(from, say("greet", lang));
 }

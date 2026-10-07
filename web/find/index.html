@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/shared/base.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="/find/styles.css">
+<title>Find my postcode · Reach Naija</title>
+</head>
+<body>
+<main>
+  <h1>Find my postcode</h1>
+  <p class="muted">Type the address, then put the pin on the building. Reach Naija asks NIPOST which postcode is there.</p>
+
+  <form id="search" class="row search-row" role="search">
+    <label for="q" class="visually-hidden">Address</label>
+    <input id="q" type="text" autocomplete="street-address" placeholder="e.g. 12 Adeola Odeku Street, Victoria Island">
+    <button type="submit">Search</button>
+    <button type="button" id="locate" class="secondary">Use my location</button>
+  </form>
+  <p id="mock-hint" class="muted" hidden><small>Mock address search: it only knows the demo addresses. Try <strong>Lagos</strong> or <strong>demo</strong>.</small></p>
+  <div id="results" aria-live="polite"></div>
+
+  <ol class="steps" id="steps">
+    <li id="st-1" class="now">Find the address, or tap the map</li>
+    <li id="st-2">Drag the pin onto the building itself</li>
+    <li id="st-3">Get the postcode from NIPOST</li>
+  </ol>
+
+  <div id="map" aria-label="Map. Tap to place the pin, or drag it."></div>
+  <button id="check" class="big" disabled>Get my postcode</button>
+
+  <section id="outcome" aria-live="polite"></section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script type="module" src="/find/find.js"></script>
+</body>
+</html>

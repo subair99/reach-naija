@@ -49,6 +49,21 @@ export const config = {
   },
 
   voiceEnabled: str("VOICE_ENABLED", "true") === "true",
+
+  // Address search for the /find/ page. mock = fixtures only; nominatim = any Nominatim-compatible
+  // server (the public one for demos, your own copy inside the sovereign zone for the pilot).
+  geocoder: {
+    mode: oneOf("GEOCODER_MODE", ["mock", "nominatim"] as const, "mock"),
+    url: str("GEOCODER_URL", "https://nominatim.openstreetmap.org").replace(/\/$/, ""),
+    userAgent: str("GEOCODER_USER_AGENT"),
+    email: str("GEOCODER_EMAIL"),
+  },
+  map: {
+    tileUrl: str("MAP_TILE_URL", "https://tile.openstreetmap.org/{z}/{x}/{y}.png"),
+    attribution: str("MAP_ATTRIBUTION", "&copy; OpenStreetMap contributors"),
+  },
+  // Where people register a building NIPOST hasn't mapped yet. NIPOST has no public submission API.
+  nipostRegisterUrl: str("NIPOST_REGISTER_URL", "https://postcode.gov.ng"),
 };
 
 export function checkConfig(): string[] {
@@ -64,6 +79,9 @@ export function checkConfig(): string[] {
   }
   if (config.hashSecret === "dev-only-secret" || config.hashSecret.startsWith("change-me")) {
     warnings.push("HASH_SECRET is the default value. Fine for a local demo; change it before real users.");
+  }
+  if (config.geocoder.mode === "nominatim" && config.geocoder.url.includes("nominatim.openstreetmap.org") && !config.geocoder.userAgent) {
+    throw new Error("GEOCODER_MODE=nominatim with the public server needs GEOCODER_USER_AGENT (e.g. \"ReachNaija-demo/0.1 you@example.com\"), as its usage policy requires.");
   }
   if (!config.whatsapp.token || !config.whatsapp.phoneId) {
     warnings.push("WhatsApp is not configured (WA_TOKEN / WA_PHONE_ID). Replies will be logged instead of sent.");

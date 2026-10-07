@@ -40,6 +40,7 @@ You should see `All checks passed.`
 | Page | What it shows |
 | --- | --- |
 | `/` | Demo home, status, WhatsApp dry-run outbox |
+| `/find/` | Type an address, confirm the pin, get the postcode |
 | `/c/<id>` | Address Card, Deliver mode (`?mode=help` for Help mode) |
 | `/shop/` | Pharmacy checkout with free L1 validation and live delivery status |
 | `/rider/` | Rider check-in, hand-over code, signed record |
@@ -56,6 +57,8 @@ server/src/
   nipost/               NIPOST client: search (reverse, nearby, autocomplete), lookup, assembly,
                         cache, and mock.ts (the stand-in used when NIPOST_MODE=mock)
   cards/                Pin → postcode resolution, Address Cards, Help cards that expire
+  geocode/              Address text → map positions (mock or Nominatim)
+  find/                 Endpoints behind the /find/ page
   channels/whatsapp/    Webhook, replies in English and Pidgin, Cloud API sending
   channels/ussd/        Africa's Talking callback and autocomplete-driven menus
   arrival/              Verified Arrival: GPS check, one-time code, Ed25519 signing
@@ -131,6 +134,7 @@ Open `https://<random>.trycloudflare.com/rider/` on your phone. Browsers only al
 | Reply | What it does |
 | --- | --- |
 | *(location pin)* | Postcode, card link, voice note |
+| *(an address, e.g. `12 Adeola Odeku St, VI`)* | A link to `/find/` with the address filled in, to confirm the pin |
 | `1`–`3` | Pick your building when the pin was ambiguous |
 | `NOTE second gate after the pharmacy` | Adds a delivery note to your card |
 | `HELP` | A Help card that expires in 12 hours (it does not call 112) |
@@ -185,7 +189,36 @@ A **Choose with NIPOST** button then appears on `/shop/`.
 
 ---
 
-## 9. The 90-second demo, mapped to this repo
+## 9. Find a postcode from a typed address
+
+The `/find/` page turns an address into a postcode in three steps: search, put the pin on the building, ask NIPOST. On WhatsApp, anyone who types an address (instead of sharing a pin) gets a link to this page with the address filled in, because WhatsApp can't show a draggable map.
+
+**Rehearsal (default):** `GEOCODER_MODE=mock` only knows the addresses in `fixtures/demo-locations.json`. Search for `Lagos` or `demo`.
+
+**Demo with real addresses:** use OpenStreetMap's public geocoder. In `.env`:
+
+```
+GEOCODER_MODE=nominatim
+GEOCODER_USER_AGENT=ReachNaija-demo/0.1 you@example.com
+GEOCODER_EMAIL=you@example.com
+```
+
+Its usage policy allows about one search per second and requires the User-Agent to identify you; the server spaces requests out automatically. It searches on submit, never as you type.
+
+**Pilot:** run your own Nominatim with the Nigeria extract of OpenStreetMap inside the Lagos hosting zone, and set `GEOCODER_URL` to it. That removes the rate limit and keeps typed addresses in Nigeria. Serve your own map tiles too, and set `MAP_TILE_URL`.
+
+**What happens at each result:**
+
+| NIPOST says | The page shows |
+| --- | --- |
+| One building, high confidence | The postcode, an optional note, **Create my Address Card** |
+| Several buildings near the pin | A list to pick from. The server checks the chosen building really is near the pin |
+| Nothing within 300 m | The confirmed coordinates and a Google Maps link to copy, plus a button to NIPOST's registration site |
+| Pin outside Nigeria | A message to move the pin |
+
+NIPOST has no public API for registering a building, so Reach Naija hands the user the location to paste into NIPOST's site rather than submitting it. Ask NIPOST during onboarding whether a submission API is planned.
+
+## 10. The 90-second demo, mapped to this repo
 
 | Time | Beat | Where |
 | --- | --- | --- |
@@ -200,7 +233,7 @@ If you demo away from the test building, turn on **Demo controls → Use a simul
 
 ---
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 | Problem | Fix |
 | --- | --- |
@@ -211,6 +244,9 @@ If you demo away from the test building, turn on **Demo controls → Use a simul
 | NIPOST `429` | Rate limit: the client already backs off and retries; slow the demo down |
 | `reverse geocode found no building` in smoke test (live) | Replace the placeholder coordinates in `fixtures/demo-locations.json` |
 | WhatsApp webhook not verifying | `WA_VERIFY_TOKEN` must match Meta's field exactly; the tunnel must be running |
+| Address search says it isn't responding | The public Nominatim server is busy or blocking you: set `GEOCODER_USER_AGENT`, slow down, or switch back to `GEOCODER_MODE=mock` |
+| `/find/` shows "The map couldn't load" | The browser can't reach cdnjs.cloudflare.com; check the internet connection |
+| "Use my location" is refused on a phone | Open `/find/` over the HTTPS tunnel address, not `http://` |
 | `STORE=postgres needs the 'pg' package` | `npm install` (pg is an optional dependency) |
 
 ---

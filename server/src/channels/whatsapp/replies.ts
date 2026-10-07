@@ -7,8 +7,8 @@ const fill = (t: string, v: Vars) => t.replace(/\{(\w+)\}/g, (_m, k) => String(v
 
 const T = {
   greet: {
-    en: "Welcome to Reach Naija.\nShare your location pin (tap 📎, then Location, then Send your current location) and I'll find your NIPOST postcode.\n\nReply PIDGIN to switch language.",
-    pcm: "Welcome to Reach Naija.\nSend your location pin (press 📎, then Location, then Send your current location) make I find your NIPOST postcode.\n\nReply ENGLISH to change language.",
+    en: "Welcome to Reach Naija.\nShare your location pin (tap 📎, then Location, then Send your current location) and I'll find your NIPOST postcode.\n\nNot at the building? Type its address instead.\nReply PIDGIN to switch language.",
+    pcm: "Welcome to Reach Naija.\nSend your location pin (press 📎, then Location, then Send your current location) make I find your NIPOST postcode.\n\nYou no dey the building? Type the address.\nReply ENGLISH to change language.",
   },
   found: {
     en: "Your postcode is {display}\nConfidence: {badge}\n\nYour Address Card: {url}\n\nReply NOTE and your directions to add a delivery note.\nReply HELP to get an emergency link.",
@@ -25,6 +25,10 @@ const T = {
   help: {
     en: "Help card for {display}:\n{url}\n\nThis link does NOT call for help. Call 112 first, then share this link with the responder.\nIt stops working after {hours} hours.",
     pcm: "Help card for {display}:\n{url}\n\nThis link NO dey call for help. Call 112 first, then send this link give the person wey dey come.\nE go stop to work after {hours} hours.",
+  },
+  address: {
+    en: "Open this link, check the pin is on your building (drag it if not), then tap Get my postcode:\n{url}",
+    pcm: "Open this link, check say the pin dey on top your building (drag am if e no dey), then press Get my postcode:\n{url}",
   },
   noteSaved: {
     en: "Delivery note saved on your card:\n\"{note}\"\n{url}",

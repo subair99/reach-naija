@@ -39,6 +39,27 @@ const c = await call("/api/cards", { json: { postcode: code, note: "Smoke test" 
 if (c.status !== 201) fail("card creation", c.body);
 ok(`card created: ${c.body.card.url}`);
 
+console.log("Find by address");
+const g = (await call(`/api/geocode?q=${encodeURIComponent("demo customer home lagos")}`)).body;
+if (!Array.isArray(g.results)) fail("address search", g);
+if (g.mode === "mock" && !g.results.length) fail("mock address search found nothing", g);
+ok(`address search (${g.mode}): ${g.results.length} result(s)`);
+const fc = (await call("/api/find/check", { json: { lat, lng } })).body;
+if (!["high", "confirm"].includes(fc.status)) fail("pin check at the demo location", fc);
+ok(`pin check: ${fc.status}`);
+const fcard = await call("/api/find/card", { json: fc.status === "high" ? { lat, lng } : { lat, lng, postcode: fc.candidates[0].postcode } });
+if (fcard.status !== 201) fail("card from a confirmed pin", fcard.body);
+ok(`card from confirmed pin: ${fcard.body.card.formatted} (${fcard.body.card.confidence})`);
+const forged = await call("/api/find/card", { json: { lat, lng, postcode: "KN-31-F82-WJ-80" } });
+if (forged.status === 201) fail("a building far from the pin was accepted");
+ok("a building far from the pin is refused");
+const sea = (await call("/api/find/check", { json: { lat: 3.0, lng: 3.0 } })).body;
+if (sea.status !== "outside") fail("pin outside Nigeria", sea);
+ok("pin outside Nigeria is flagged");
+const empty = (await call("/api/find/check", { json: { lat: 8.0, lng: 6.0 } })).body;
+if (empty.status !== "none" || !empty.register?.mapsLink) fail("unmapped spot should offer registration help", empty);
+ok("unmapped spot offers registration help");
+
 console.log("WhatsApp");
 await call("/webhooks/whatsapp", { json: { entry: [{ changes: [{ value: { messages: [
   { from: "2348000000000", type: "location", location: { latitude: lat, longitude: lng } }] } }] }] } });
@@ -46,6 +67,15 @@ await new Promise((res) => setTimeout(res, 800));
 const out = await call("/api/dev/outbox");
 if (out.status === 200) ok(`dry-run reply: ${String(out.body.messages.at(-1)?.body ?? "(none)").split("\n")[0]}`);
 else ok("WhatsApp is live: check the test phone for the reply");
+await call("/webhooks/whatsapp", { json: { entry: [{ changes: [{ value: { messages: [
+  { from: "2348000000001", type: "text", text: { body: "12 Mock Street, Lagos" } }] } }] }] } });
+await new Promise((res) => setTimeout(res, 500));
+const out2 = await call("/api/dev/outbox");
+if (out2.status === 200) {
+  const last = String(out2.body.messages.at(-1)?.body ?? "");
+  if (!last.includes("/find/?q=")) fail("typed address should get a map link", last);
+  ok("typed address gets a map link");
+}
 
 console.log("USSD");
 const u1 = (await call("/webhooks/ussd", { form: { sessionId: "s1", serviceCode: "*384*1#", phoneNumber: "+2348000000000", text: "" } })).body;
