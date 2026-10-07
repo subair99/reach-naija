@@ -192,7 +192,7 @@ Before opening a pull request, run `npm run smoke` and `npm run typecheck`.
 
 ## License
 
-No license has been chosen yet. Add one before making this repository public.
+MIT license.
 
 ---
 
